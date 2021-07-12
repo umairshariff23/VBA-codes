@@ -1,0 +1,134 @@
+Sub RandomPatientGenerator_withSuperProvFilter()
+'
+' Macro1 Macro
+'
+' Keyboard Shortcut: Ctrl+Shift+T
+'
+     Dim lastRow As Long
+     
+    Application.Calculation = xlCalculationManual
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
+        
+    Columns("A:Z").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    
+    Columns("AA:AB").Copy Destination:=Columns("B:C")
+    Columns("AG:AG").Copy Destination:=Columns("D:D")
+    Columns("AP:AP").Copy Destination:=Columns("E:E")
+    
+    Range("G1").Formula2 = "=TRIM(UNIQUE(B:E,FALSE,FALSE))"
+        Columns("G:J").Copy
+        Columns("B:E").PasteSpecial Paste:=xlPasteValues
+    Columns("G:J").Clear
+    Columns("B:E").Select
+    Selection.Columns.Sort Key1:=Columns("D"), Order1:=xlAscending, Header:=xlNo
+    Range("B1:E1").Insert
+    
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+    
+    Application.Calculation = xlCalculationManual
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
+
+    Range("A2").Formula2 = "=LET(n, COUNTIF(D:D,D2), r, COUNTIF(D:D,D2), Rnd, RANDARRAY(n),IF(COUNTIF(D1:D2,D2)=1,FILTER(SEQUENCE(n), Rnd>=LARGE(Rnd, r)),""Clear""))"
+    lastRowForB = Cells(Rows.Count, "B").End(xlUp).Row
+    Range("A2").AutoFill Destination:=Range("A2:A" & lastRowForB)
+    
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+    
+    Application.Calculation = xlCalculationManual
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
+    
+    For Each Cell In Range("A1:A" & lastRowForB).Cells
+    If Cell.Text = "Clear" Then
+        Cell.ClearContents
+    End If
+Next
+
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+
+    Columns("A").Copy
+    Columns("A").PasteSpecial Paste:=xlPasteValues
+    
+    Application.Calculation = xlCalculationManual
+    Application.ScreenUpdating = False
+    Application.EnableEvents = False
+    
+    Range("I1:I3").Value = "BP"
+    Range("I4:I6").Value = "EJ"
+    Range("I7:I9").Value = "JB"
+    Range("I10:I12").Value = "KAW"
+    Range("I13:I15").Value = "MEPAR"
+    Range("I16:I18").Value = "SCOTT"
+    Range("I19:I20").Value = "DR"
+    Range("I21:I22").Value = "ES"
+    Range("I23:I24").Value = "KM"
+    Range("I25").Value = "ALISW"
+    Range("I26").Value = "AMFER"
+    Range("I27").Value = "AV"
+    Range("I28").Value = "BB"
+    Range("I29").Value = "CHIP"
+    Range("I30").Value = "CSE"
+    Range("I31").Value = "CT"
+    Range("I32").Value = "HEMAN"
+    Range("I33").Value = "JH2"
+    Range("I34").Value = "KAWA"
+    Range("I35").Value = "MEL"
+    Range("I36").Value = "MICHE"
+    Range("I37").Value = "NANBE"
+    Range("I38").Value = "NM"
+    Range("I39").Value = "RE"
+    Range("I40").Value = "REDAY"
+    Range("I41").Value = "RITWH"
+    Range("I42").Value = "SMAR"
+    Range("I43").Value = "TOPPI"
+    Range("I44:I50").Formula2 = "=INDEX(D:D,RANDBETWEEN(2,COUNTA(D:D)))"
+    Columns("I").Copy
+    Columns("I").PasteSpecial Paste:=xlPasteValues
+    Columns("I").Select
+    Selection.Columns.Sort Key1:=Columns("I"), Order1:=xlAscending, Header:=xlNo
+    
+    Range("H1:I1").Insert
+    
+    Range("H2").Formula2 = "=LET(n, COUNTIF(D:D,I2), r, COUNTIF(I:I,I2), Rnd, RANDARRAY(n),IF(COUNTIF(I1:I2,I2)=1,FILTER(SEQUENCE(n), Rnd>=LARGE(Rnd, r)),""Clear""))"
+    lastRow = Cells(Rows.Count, "I").End(xlUp).Row
+    Range("H2").AutoFill Destination:=Range("H2:H" & lastRow)
+    Range("J2:J51").Formula2 = "=IFERROR(XLOOKUP(H2&I2,A:A&D:D,B:E),""Insufficient Origin Data For This Provider"")"
+    
+    Range("A1").Value = "Serial Number"
+    Range("B1").Value = "Pt. Name"
+    Range("C1").Value = "Chart No."
+    Range("D1").Value = "Provider"
+    Range("E1").Value = "Pt. DOB"
+    Range("H1").Value = "Random Number"
+    Range("J1").Value = "Pt. Name"
+    Range("K1").Value = "Chart No."
+    Range("L1").Value = "Provider"
+    Range("M1").Value = "Pt. DOB"
+    
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+    
+    For Each Cell In Columns("H").Cells
+    If Cell.Text = "Clear" Then
+        Cell.ClearContents
+    End If
+Next
+
+    Columns("H:M").Copy
+    Columns("H:M").PasteSpecial Paste:=xlPasteValues
+    Columns("I").EntireColumn.Delete
+    Columns("H:L").AutoFit
+    Range("L2:L51") = Range("L2:L51").Value
+    Range("L2:L51").NumberFormat = "mm/dd/yyy"
+    
+    
+End Sub
